@@ -10,20 +10,20 @@ import copy
 import math
 from random import randint
 import os
-path = "/home/atharva/Pictures/t24/"
-sample_path = "/home/atharva/Pictures/t24/9_samples/8class_new60percent/"
+path = "/Users/cfarzaneh/Desktop/LC08_L1TP_016042_20140210_20170307_01_T1/"
+sample_path = "/Users/cfarzaneh/Desktop/8class_new60percent/"
 
 #num_class_list = [6]
 #pix_dim_list = [5,7]
 num_class = 8
 pix_dim = 9
 #ref = cv2.imread(path + "ref8.tiff",-1)
-output = np.load(path + "outfile.npy")
+output = np.load(path + "outfileLC08_L1TP_016042_20140210_20170307_01_T1.npy")
 
 def ready_and_execute(num_class,pix_dim):
     
-    ref = cv2.imread(path + "ref"+str(num_class)+".tiff",-1)
-    print ref.shape
+    ref = cv2.imread(path + "reference.tiff",-1)
+    print (ref.shape)
     unique_ref = np.unique(ref)
     list1 = np.delete(unique_ref,[0,len(unique_ref)-1])
     return ref, list1
@@ -229,7 +229,7 @@ def split_samples(pixel_samples,samples):
 	test_index = generate_hundred_test(num_samples)
 	test_pixel_samples = pixel_samples[test_index]
 	test_samples =samples[test_index]
-	print "test_samples", len(test_samples), len(test_pixel_samples)
+	print ("test_samples", len(test_samples), len(test_pixel_samples))
 	train_pixel_samples = np.delete(pixel_samples,test_index,0)
 	training_samples = np.delete(samples,test_index,0)
 	samples_dict ["patch"] = [test_samples,training_samples]
@@ -255,51 +255,50 @@ def hundred_percent(num_class,conv_dim):
     temp_pix_data = []
     temp_number = []
     for classes in list1:
-    	dataset ={}
-        print "total samples of", classes , "is",len(dict1[classes])
+        dataset ={}
+        print ("total samples of", classes , "is",len(dict1[classes]))
         temp = dict1[classes]
         pixel_data,conv_data = cut_conv_image(temp, output, ref,int(classes),conv_dim)
-        print "Before split ",len(conv_data), len(pixel_data)
+        print ("Before split ",len(conv_data), len(pixel_data))
         if len(conv_data) > 2000:
-        	dataset = split_samples(pixel_data,conv_data)
-        	label = int(classes)
-        	test_labels = create_test_label(label,num_class)
-        	np.save(folder_conv+'/'+ 'test_patch_of_'+str(label) +'.npy',dataset["patch"][0])
-        	np.save(folder_pixel+'/'+ 'test_pixel_of_'+str(label) +'.npy',dataset["pixel"][0])
-        	np.save(folder_conv+'/'+ 'test_label_'+str(label) +'.npy',test_labels)
-        	np.save(folder_pixel+'/'+ 'test_label_'+str(label) +'.npy',test_labels)
+            dataset = split_samples(pixel_data,conv_data)
+            label = int(classes)
+            test_labels = create_test_label(label,num_class)
+            np.save(folder_conv+'/'+ 'test_patch_of_'+str(label) +'.npy',dataset["patch"][0])
+            np.save(folder_pixel+'/'+ 'test_pixel_of_'+str(label) +'.npy',dataset["pixel"][0])
+            np.save(folder_conv+'/'+ 'test_label_'+str(label) +'.npy',test_labels)
+            np.save(folder_pixel+'/'+ 'test_label_'+str(label) +'.npy',test_labels)
             #test_samples, train_samples = split_samples(conv_data)'''
-            
-            
-            
-        if len(dataset["patch"][1]) != 0:
-            print "After split",len(dataset["patch"][1]),len(dataset["pixel"][1])
-            temp_data.extend(dataset["patch"][1])
-            temp_pix_data.extend(dataset["pixel"][1])
-            temp_number.append(len(dataset["patch"][1]))
-            dataset = {}
+              
+        if "patch" in dataset:
+            if len(dataset["patch"][1]) != 0:
+                print ("After split",len(dataset["patch"][1]),len(dataset["pixel"][1]))
+                temp_data.extend(dataset["patch"][1])
+                temp_pix_data.extend(dataset["pixel"][1])
+                temp_number.append(len(dataset["patch"][1]))
+                dataset = {}
            
     temp_data = np.array(temp_data)
     temp_pix_data = np.array(temp_pix_data)
     temp_labels, temp_min = generate_labels(temp_number)
-    print "num",len(temp_data), len(temp_pix_data)
-    print "temp_number", len(temp_labels)
-    print "min_value",temp_min
+    print ("num",len(temp_data), len(temp_pix_data))
+    print ("temp_number", len(temp_labels))
+    print ("min_value",temp_min)
     X_pixel_train, X_patch_train, Y_train, permut_list = permutate_samples_order(temp_pix_data,temp_data,temp_labels)
     Y_train_new = create_label(Y_train,num_class)
     if X_patch_train is not None:
         np.save(folder_conv+'/'+ 'X_train_patch.npy',X_patch_train)
         np.save(folder_conv+'/'+'Y_train_patch.npy',Y_train_new)
-        print "++++++++++++++"
+        print ("++++++++++++++")
     else:
-        print "Unexpected" 
+        print ("Unexpected")
 
     if X_pixel_train is not None:
         np.save(folder_pixel+'/'+ 'X_train_pixel.npy',X_pixel_train)
         np.save(folder_pixel+'/'+'Y_train_pixel.npy',Y_train_new)
-        print "++++++++++++++"
+        print ("++++++++++++++")
     else:
-        print "Unexpected"     
+        print ("Unexpected")
 
 '''for num_class in num_class_list:
     for pix_dim in pix_dim_list:
@@ -318,8 +317,8 @@ def hundred_percent(num_class,conv_dim):
 '''
 
 
-print "Sample with:", num_class ,"classes and a patch dimension :", pix_dim
-print "------------------------------------------------------------------"
+print ("Sample with:", num_class ,"classes and a patch dimension :", pix_dim)
+print ("------------------------------------------------------------------")
 ref, list1 = ready_and_execute(num_class,pix_dim)
 
 dict1 = {}     
