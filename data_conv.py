@@ -22,11 +22,13 @@ output = np.load(path + "outfileLC08_L1TP_016042_20140210_20170307_01_T1.npy")
 
 def ready_and_execute(num_class,pix_dim):
     
-    ref = cv2.imread(path + "reference.tiff",-1)
-    print (ref.shape)
+    ref = cv2.imread(path + "ref8_new.tiff",-1)
+    print(ref.shape)
     unique_ref = np.unique(ref)
     list1 = np.delete(unique_ref,[0,len(unique_ref)-1])
+
     return ref, list1
+    #return ref, unique_ref
 
 
 def get_index(value,ref):
@@ -235,12 +237,7 @@ def split_samples(pixel_samples,samples):
 	samples_dict ["patch"] = [test_samples,training_samples]
 	samples_dict ["pixel"] = [test_pixel_samples,train_pixel_samples]
 	#print "training_sample", len(training_samples)
-	return samples_dict
-    
-    
-
-
-
+	return samples_dict 
 
 def hundred_percent(num_class,conv_dim):
     folder_conv = sample_path +str(num_class)+'classes_with_path_dim_'+str(conv_dim)
@@ -326,12 +323,4 @@ for element in list1:
            # storing indices of all the classes in dict1 dictionary
     dict1[element] = get_index(element,ref)
 
-
 hundred_percent(num_class,pix_dim)
-    
-    
-
-
-    
-
- 
