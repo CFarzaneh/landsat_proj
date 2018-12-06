@@ -11,7 +11,7 @@ import math
 from random import randint
 import os
 path = "/Volumes/CamResearch/landsat_proj/LC08_L1TP_016042_20140210_20170307_01_T1/"
-sample_path = "/Users/cfarzaneh/Desktop/8class_new60percent/"
+sample_path = "/Users/cfarzaneh/Desktop/8class_new60percentNEW/"
 
 #path = "/media/cfarzaneh/CamResearch/landsat_proj/LC08_L1TP_016042_20140210_20170307_01_T1/"
 #sample_path = "/media/cfarzaneh/CamResearch/landsat_proj/8class_new60percent/"
@@ -175,7 +175,10 @@ def cut_conv_image(index_file,out_image, ref,num_id, image_dim):
 					ul_y = ind_num[0]-max_level
 					ul_x = ind_num[1]-max_level
 					pixel_sample = out_image[ind_num[0]][ind_num[1]]
+					firstSample = out_image[ul_y:ul_y+ image_dim, ul_x:ul_x+ image_dim ]
 					sample = out_image[ul_y:ul_y+ 11, ul_x:ul_x+ 11 ] #HERE IS WHERE I DO HAX
+					if np.array_equal(firstSample,sample[0:2,0:2]) == False:
+						print("FALSE")
 					if sample.shape == (11,11,8):
 						temp.append(sample)
 					temp_pixel.append(pixel_sample)

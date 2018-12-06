@@ -1,9 +1,18 @@
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+sess = tf.Session(config=config)
+set_session(sess)  # set this TensorFlow session as the default session for Keras
+
 from keras.models import load_model
 import numpy as np
 import os
-from tqdm import tqdm
 
-samplePath = '/Users/cfarzaneh/Desktop/8classes_with_path_dim_3_HACKED/'
+samplePath = '8classes_with_path_dim_3_HACKED/'
 
 valLabels = []
 elevenEleven = []
@@ -35,7 +44,7 @@ threeThree = np.stack(threeThree, axis=0)
 print("Loading models for ensemble")
 models = []
 i = 0
-for model in tqdm(['model_3dim.h5','model_5dim.h5','model_7dim.h5','model_9dim.h5','model_11dim.h5']):
+for model in ['model_3dim.h5','model_5dim.h5','model_7dim.h5','model_9dim.h5','model_11dim.h5']:
 	model = load_model(model)
 	models.append(model)
 	if i == 0:
